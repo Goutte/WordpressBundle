@@ -34,11 +34,19 @@ Usage examples
 In a Controller
 
     ```php
-    $em = $this->get('doctrine')->getEntityManager();
-    $repository = $em->getRepository('GoutteWordpressBundle:Post');
+    <?php
+    class WordpressController extends Controller
+    {
+        public function listAction() {
+          $em = $this->get('doctrine')->getEntityManager();
+          $repository = $em->getRepository('GoutteWordpressBundle:Post');
 
-    $posts  = $repository->findPublishedPosts();
-    $images = $repository->findJpegImages();
+          $posts  = $repository->findPublishedPosts();
+          $images = $repository->findJpegImages();
+
+          // ...
+        }
+    }
     ```
 
 
@@ -55,10 +63,9 @@ How to setup tests
    ```json
    "autoload": {
      "psr-0": {
-       // ...
        "Doctrine\\Tests\\DBAL": "vendor/doctrine/dbal/tests/"
      }
-   },
+   }
    ```
 
 5. Run !
