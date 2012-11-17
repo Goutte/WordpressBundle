@@ -34,7 +34,7 @@ class PostTest extends WebTestCase
      *
      * @dataProvider postProvider
      */
-    public function testPostExcerpt($title, $content, $userId)
+    public function testPostExcerpt($title, $content)
     {
         $post = new Post();
         $post->setTitle($title);
