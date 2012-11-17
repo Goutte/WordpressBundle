@@ -18,7 +18,29 @@ but until the [CMF](http://cmf.symfony.com) is media-ready this is a good enough
 How to use
 ==========
 
-Run the tests, there is nothing else to do right now.
+1. Register this bundle in your AppKernel.php
+2. Configure in app/config.yml
+
+    ```yml
+    goutte_wordpress:
+        # WP tables prefix, default is 'wp_'
+        table_prefix: wp_
+    ```
+
+
+Usage examples
+==============
+
+In a Controller
+
+    ```php
+    $em = $this->get('doctrine')->getEntityManager();
+    $repository = $em->getRepository('GoutteWordpressBundle:Post');
+
+    $posts  = $repository->findPublishedPosts();
+    $images = $repository->findJpegImages();
+    ```
+
 
 
 How to setup tests
@@ -27,7 +49,7 @@ How to setup tests
 1. Copy phpunit.xml.dist to phpunit.xml
 2. Configure KERNEL_DIR
 3. Register this bundle in your AppKernel.php
-4. Update your composer.json, as we are using Doctrine Mocks
+4. Update your composer.json, as we are using Doctrine Mocks.
    This is not optimized, how can I restrict this to the test env ?
 
    ```json

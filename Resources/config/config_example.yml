@@ -1,0 +1,3 @@
+goutte_wordpress:
+    # WP tables prefix, default is 'wp_'
+    table_prefix: wp_
