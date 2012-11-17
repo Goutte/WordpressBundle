@@ -94,7 +94,7 @@ class Post
     /**
      * @var int excerpt length
      */
-    private $excerptLength = 100;
+    private $excerpt_length = 100;
 
     /**
      * @var string $status
@@ -108,14 +108,14 @@ class Post
      *
      * @ORM\Column(name="comment_status", type="string", length=20, nullable=false)
      */
-    private $commentStatus = self::STATUS_OPEN;
+    private $comment_status = self::STATUS_OPEN;
 
     /**
      * @var string $pingStatus
      *
      * @ORM\Column(name="ping_status", type="string", length=20, nullable=false)
      */
-    private $pingStatus = self::STATUS_OPEN;
+    private $ping_status = self::STATUS_OPEN;
 
     /**
      * @var string $password
@@ -133,25 +133,25 @@ class Post
     private $slug;
 
     /**
-     * @var text $toPing
+     * @var string $to_ping
      *
      * @ORM\Column(name="to_ping", type="text", nullable=false)
      */
-    private $toPing = "";
+    private $to_ping = "";
 
     /**
-     * @var text $pinged
+     * @var string $pinged
      *
      * @ORM\Column(name="pinged", type="text", nullable=false)
      */
     private $pinged = "";
 
     /**
-     * @var text $contentFiltered
+     * @var string $content_filtered
      *
      * @ORM\Column(name="post_content_filtered", type="text", nullable=false)
      */
-    private $contentFiltered = "";
+    private $content_filtered = "";
 
     /**
      * @var \Goutte\WordpressBundle\Entity\Post $parent
@@ -176,32 +176,32 @@ class Post
     private $guid = "";
 
     /**
-     * @var integer $menuOrder
+     * @var integer $menu_order
      *
-     * @ORM\Column(name="menu_order", type="integer", length=11, nullable=false)
+     * @ORM\Column(name="menu_order", type="integer", length=11)
      */
-    private $menuOrder = 0;
+    private $menu_order = 0;
 
     /**
      * @var string $type
      *
-     * @ORM\Column(name="post_type", type="string", nullable=false)
+     * @ORM\Column(name="post_type", type="string")
      */
     private $type = self::TYPE_POST;
 
     /**
-     * @var string $mimeType
+     * @var string $mime_type
      *
-     * @ORM\Column(name="post_mime_type", type="string", length=100, nullable=false)
+     * @ORM\Column(name="post_mime_type", type="string", length=100)
      */
-    private $mimeType = "";
+    private $mime_type = "";
 
     /**
-     * @var bigint $commentCount
+     * @var int $commentCount
      *
-     * @ORM\Column(name="comment_count", type="bigint", length=20, nullable=false)
+     * @ORM\Column(name="comment_count", type="bigint", length=20)
      */
-    private $commentCount = 0;
+    private $comment_count = 0;
 
     /**
      * @var \Goutte\WordpressBundle\Entity\PostMeta
@@ -255,9 +255,9 @@ class Post
      */
     public function onPrePersist()
     {
-        $this->created_at            = new \DateTime('now');
-        $this->created_at_gmt         = new \DateTime('now', new \DateTimeZone('GMT'));
-        $this->modified_at    = new \DateTime('now');
+        $this->created_at      = new \DateTime('now');
+        $this->created_at_gmt  = new \DateTime('now', new \DateTimeZone('GMT'));
+        $this->modified_at     = new \DateTime('now');
         $this->modified_at_gmt = new \DateTime('now', new \DateTimeZone('GMT'));
     }
 
@@ -267,13 +267,13 @@ class Post
     public function onPreUpdate()
     {
         $this->modified_at     = new \DateTime('now');
-        $this->modified_at_gmt  = new \DateTime('now', new \DateTimeZone('GMT'));
+        $this->modified_at_gmt = new \DateTime('now', new \DateTimeZone('GMT'));
     }
 
     /**
      * Get ID
      *
-     * @return bigint
+     * @return int
      */
     public function getId()
     {
@@ -283,7 +283,7 @@ class Post
     /**
      * Set date
      *
-     * @param datetime $date
+     * @param \Datetime $date
      */
     public function setCreatedAt($date)
     {
@@ -293,7 +293,7 @@ class Post
     /**
      * Get date
      *
-     * @return datetime
+     * @return \Datetime
      */
     public function getCreatedAt()
     {
@@ -303,7 +303,7 @@ class Post
     /**
      * Set dateGmt
      *
-     * @param datetime $dateGmt
+     * @param \Datetime $dateGmt
      */
     public function setCreatedAtGmt($dateGmt)
     {
@@ -313,7 +313,7 @@ class Post
     /**
      * Get dateGmt
      *
-     * @return datetime
+     * @return \Datetime
      */
     public function getCreatedAtGmt()
     {
@@ -321,32 +321,39 @@ class Post
     }
 
     /**
+     * Get content
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
      * Set content
      *
-     * @param text $content
+     * @param string $content
      */
     public function setContent($content)
     {
         $this->content = $content;
 
-        $this->excerpt = $this->trimContent($content);
+        $this->excerpt = $this->getTrimmedContent($content);
     }
 
     /**
      * Cut string to n symbols and add delim but do not break words.
      *
-     * @param string string we are operating with
-     * @param integer character count to cut to
-     * @param string|NULL delimiter. Default: '...'
+     * @param  string string to trim
      * @return string processed string
      **/
-    public function trimContent($content)
+    public function getTrimmedContent()
     {
-        $content = strip_tags($content);
+        $content = strip_tags($this->getContent());
         $length = $this->getExcerptLength();
 
         if (strlen($content) <= $length) {
-            // return origin content if not needed
             return $content;
         }
 
@@ -361,19 +368,9 @@ class Post
     }
 
     /**
-     * Get content
-     *
-     * @return text
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
      * Set title
      *
-     * @param text $title
+     * @param string $title
      */
     public function setTitle($title)
     {
@@ -383,7 +380,7 @@ class Post
     /**
      * Get title
      *
-     * @return text
+     * @return string
      */
     public function getTitle()
     {
@@ -393,7 +390,7 @@ class Post
     /**
      * Set excerpt
      *
-     * @param text $excerpt
+     * @param string $excerpt
      */
     public function setExcerpt($excerpt)
     {
@@ -403,7 +400,7 @@ class Post
     /**
      * Get excerpt
      *
-     * @return text
+     * @return string
      */
     public function getExcerpt()
     {
@@ -417,7 +414,7 @@ class Post
      */
     public function setExcerptLength($excerptLength)
     {
-        $this->excerptLength = (int) $excerptLength;
+        $this->excerpt_length = (int) $excerptLength;
     }
 
     /**
@@ -427,7 +424,7 @@ class Post
      */
     public function getExcerptLength()
     {
-        return $this->excerptLength;
+        return $this->excerpt_length;
     }
 
     /**
@@ -457,7 +454,7 @@ class Post
      */
     public function setCommentStatus($commentStatus)
     {
-        $this->commentStatus = $commentStatus;
+        $this->comment_status = $commentStatus;
     }
 
     /**
@@ -467,7 +464,7 @@ class Post
      */
     public function getCommentStatus()
     {
-        return $this->commentStatus;
+        return $this->comment_status;
     }
 
     /**
@@ -477,7 +474,7 @@ class Post
      */
     public function setPingStatus($pingStatus)
     {
-        $this->pingStatus = $pingStatus;
+        $this->ping_status = $pingStatus;
     }
 
     /**
@@ -487,7 +484,7 @@ class Post
      */
     public function getPingStatus()
     {
-        return $this->pingStatus;
+        return $this->ping_status;
     }
 
     /**
@@ -533,27 +530,27 @@ class Post
     /**
      * Set toPing
      *
-     * @param text $toPing
+     * @param string $toPing
      */
     public function setToPing($toPing)
     {
-        $this->toPing = $toPing;
+        $this->to_ping = $toPing;
     }
 
     /**
      * Get toPing
      *
-     * @return text
+     * @return string
      */
     public function getToPing()
     {
-        return $this->toPing;
+        return $this->to_ping;
     }
 
     /**
      * Set pinged
      *
-     * @param text $pinged
+     * @param string $pinged
      */
     public function setPinged($pinged)
     {
@@ -563,7 +560,7 @@ class Post
     /**
      * Get pinged
      *
-     * @return text
+     * @return string
      */
     public function getPinged()
     {
@@ -573,17 +570,17 @@ class Post
     /**
      * Set modifiedDate
      *
-     * @param datetime $modifiedDate
+     * @param \Datetime $modified_at
      */
-    public function setModifiedAt($modifiedDate)
+    public function setModifiedAt($modified_at)
     {
-        $this->modified_at = $modifiedDate;
+        $this->modified_at = $modified_at;
     }
 
     /**
      * Get modifiedDate
      *
-     * @return datetime
+     * @return \Datetime
      */
     public function getModifiedAt()
     {
@@ -593,17 +590,17 @@ class Post
     /**
      * Set modifiedDateGmt
      *
-     * @param datetime $modifiedDateGmt
+     * @param \Datetime $modified_at_gmt
      */
-    public function setModifiedAtGmt($modifiedDateGmt)
+    public function setModifiedAtGmt($modified_at_gmt)
     {
-        $this->modified_at_gmt = $modifiedDateGmt;
+        $this->modified_at_gmt = $modified_at_gmt;
     }
 
     /**
      * Get modifiedDateGmt
      *
-     * @return datetime
+     * @return \Datetime
      */
     public function getModifiedAtGmt()
     {
@@ -613,21 +610,21 @@ class Post
     /**
      * Set contentFiltered
      *
-     * @param text $contentFiltered
+     * @param string $contentFiltered
      */
     public function setContentFiltered($contentFiltered)
     {
-        $this->contentFiltered = $contentFiltered;
+        $this->content_filtered = $contentFiltered;
     }
 
     /**
      * Get contentFiltered
      *
-     * @return text
+     * @return string
      */
     public function getContentFiltered()
     {
-        return $this->contentFiltered;
+        return $this->content_filtered;
     }
 
     /**
@@ -661,7 +658,7 @@ class Post
     }
 
     /**
-     * Set parent
+     * Add child
      *
      * @param \Goutte\WordpressBundle\Entity\Post $child
      */
@@ -698,7 +695,7 @@ class Post
      */
     public function setMenuOrder($menuOrder)
     {
-        $this->menuOrder = $menuOrder;
+        $this->menu_order = $menuOrder;
     }
 
     /**
@@ -708,7 +705,7 @@ class Post
      */
     public function getMenuOrder()
     {
-        return $this->menuOrder;
+        return $this->menu_order;
     }
 
     /**
@@ -738,7 +735,7 @@ class Post
      */
     public function setMimeType($mimeType)
     {
-        $this->mimeType = $mimeType;
+        $this->mime_type = $mimeType;
     }
 
     /**
@@ -748,27 +745,27 @@ class Post
      */
     public function getMimeType()
     {
-        return $this->mimeType;
+        return $this->mime_type;
     }
 
     /**
      * Set commentCount
      *
-     * @param bigint $commentCount
+     * @param int $commentCount
      */
     public function setCommentCount($commentCount)
     {
-        $this->commentCount = $commentCount;
+        $this->comment_count = $commentCount;
     }
 
     /**
      * Get commentCount
      *
-     * @return bigint
+     * @return int
      */
     public function getCommentCount()
     {
-        return $this->commentCount;
+        return $this->comment_count;
     }
 
     /**
@@ -814,7 +811,7 @@ class Post
     {
         $comment->setPost($this);
         $this->comments[] = $comment;
-        $this->commentCount = $this->getComments()->count();
+        $this->comment_count = $this->getComments()->count();
     }
 
     /**
@@ -825,6 +822,26 @@ class Post
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * Add taxonomies
+     *
+     * @param \Goutte\WordpressBundle\Entity\Taxonomy $taxonomy
+     */
+    public function addTaxonomy(\Goutte\WordpressBundle\Entity\Taxonomy $taxonomy)
+    {
+        $this->taxonomies[] = $taxonomy;
+    }
+
+    /**
+     * Get taxonomies
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTaxonomies()
+    {
+        return $this->taxonomies;
     }
 
     /**
@@ -857,23 +874,4 @@ class Post
         return $this->user;
     }
 
-    /**
-     * Add taxonomies
-     *
-     * @param \Goutte\WordpressBundle\Entity\Taxonomy $taxonomy
-     */
-    public function addTaxonomy(\Goutte\WordpressBundle\Entity\Taxonomy $taxonomy)
-    {
-        $this->taxonomies[] = $taxonomy;
-    }
-
-    /**
-     * Get taxonomies
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTaxonomies()
-    {
-        return $this->taxonomies;
-    }
 }

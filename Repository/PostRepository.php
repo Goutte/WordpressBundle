@@ -50,7 +50,7 @@ class PostRepository extends EntityRepository
     public function findPublishedPostOrPageBySlug($slug)
     {
         $query = $this->getEntityManager()->createQuery(
-            'SELECT p FROM Goutte\WordpressBundle\Entity\Post p
+            'SELECT p FROM Goutte \WordpressBundle\Entity\Post p
              WHERE p.slug = :slug
              AND p.status = :status
              AND p.type IN (:type_post, :type_page)'
