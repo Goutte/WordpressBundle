@@ -33,21 +33,21 @@ Usage examples
 
 In a Controller
 
-    ```php
-    <?php
-    class WordpressController extends Controller
-    {
-        public function listAction() {
-          $em = $this->get('doctrine')->getEntityManager();
-          $repository = $em->getRepository('GoutteWordpressBundle:Post');
+```php
+<?php
+class WordpressController extends Controller
+{
+    public function listAction() {
+      $em = $this->get('doctrine')->getEntityManager();
+      $repository = $em->getRepository('GoutteWordpressBundle:Post');
 
-          $posts  = $repository->findPublishedPosts();
-          $images = $repository->findJpegImages();
+      $posts  = $repository->findPublishedPosts();
+      $images = $repository->findJpegImages();
 
-          // ...
-        }
+      // ...
     }
-    ```
+}
+```
 
 
 
