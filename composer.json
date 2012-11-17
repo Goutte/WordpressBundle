@@ -1,0 +1,13 @@
+{
+    "name": "goutte/wordpress-bundle",
+    "type": "symfony-bundle",
+    "require": {
+        "php": ">=5.3.3",
+        "doctrine/data-fixtures": "dev-master",
+        "stof/doctrine-extensions-bundle": "dev-master"
+    },
+    "autoload": {
+        "psr-0": { "Goutte\\WordpressBundle": "" }
+    },
+    "target-dir": "Goutte/WordpressBundle"
+}

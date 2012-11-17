@@ -1,24 +1,15 @@
 <?php
 
-namespace Goutte\WordpressBundle\Tests\Entity;
+namespace Goutte\WordpressBundle\Tests\Repository;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Goutte\WordpressBundle\Entity\Post;
+use Goutte\WordpressBundle\Tests\Repository\RepositoryTestCase;
 
-class PostRepositoryTest extends WebTestCase
+class PostRepositoryTest extends RepositoryTestCase
 {
     /**
-     * @var \Symfony\Component\HttpKernel\Kernel
-     */
-    static $kernel;
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $em;
-
-    /**
-     * @var \Goutte\WordpressBundle\Repository\PostRepository
+     * @var \Doctrine\ORM\EntityRepository
      */
     private $repo;
 
@@ -26,11 +17,7 @@ class PostRepositoryTest extends WebTestCase
     {
         parent::setUp();
 
-        static::$kernel = static::createKernel();
-        static::$kernel->boot();
-
-        $this->em   = static::$kernel->getContainer()->get('doctrine.orm.entity_manager');
-        $this->repo = $this->em->getRepository('GoutteWordpressBundle:Post');
+        $this->repo = $this->getEm()->getRepository('GoutteWordpressBundle:Post');
     }
 
     public function testFindPublishedPosts()
