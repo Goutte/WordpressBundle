@@ -75,7 +75,7 @@ class PostRepository extends EntityRepository
             'SELECT p FROM Goutte\WordpressBundle\Entity\Post p
              WHERE p.type = :type
              AND p.status   = :status
-             AND p.mimeType = :mimeType
+             AND p.mime_type = :mimeType
              ORDER BY p.created_at DESC'
         );
 
