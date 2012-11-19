@@ -15,7 +15,11 @@ use Symfony\Component\Validator\Constraints as Constraints;
  * @ORM\HasLifecycleCallbacks
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="post_type", type="string")
- * @ORM\DiscriminatorMap({BasePost::TYPE_POST = "Post", BasePost::TYPE_PAGE = "Page", BasePost::TYPE_ATTACHMENT = "Attachment"})
+ * @ORM\DiscriminatorMap({
+ *      BasePost::TYPE_POST       = "Post",
+ *      BasePost::TYPE_PAGE       = "Page",
+ *      BasePost::TYPE_ATTACHMENT = "Attachment"
+ * })
  */
 class BasePost
 {
