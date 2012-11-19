@@ -3,66 +3,43 @@
 namespace Goutte\WordpressBundle\Repository;
 
 use Doctrine\ORM\Mapping as ORM; // needed (inheritance?)
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
-use Goutte\WordpressBundle\Entity\Post;
+use Doctrine\ORM\QueryBuilder;
+use Goutte\WordpressBundle\Entity\Attachment;
 
 class AttachmentRepository extends BasePostRepository
 {
-
-    // FIXME
+    /**
+     * Finds the images
+     * @param string|array|null $subtypes
+     * @return array
+     */
+    public function findImages($subtypes = null)
+    {
+        $qb = $this->cqbForTypeAndSubtypes(Attachment::TYPE_IMAGE, $subtypes);
+        return $qb->getQuery()->getResult();
+    }
 
     /**
-     * @param $mimeType
-     * @return Query
+     * Creates QueryBuilder for specified mime $type and optional $subtypes
+     * @param string $type
+     * @param mixed  $subtypes
+     * @return QueryBuilder
      */
-    public function getMediasQuery($mimeType)
+    protected function cqbForTypeAndSubtypes($type, $subtypes=null)
     {
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT p FROM Goutte\WordpressBundle\Entity\Post p
-             WHERE p.type = :type
-             AND p.status   = :status
-             AND p.mime_type = :mimeType
-             ORDER BY p.created_at DESC'
-        );
-
-        list ($type, $subtype) = explode('/', $mimeType);
-
-        if (empty($subtype)) {
-
+        $qb = $this->createQueryBuilder('i');
+        if (empty($subtypes)) {
+            $qb->andWhere('i.mime_type LIKE :type');
+            $qb->setParameter('type', $type.'%');
         } else {
-            $q = new \Doctrine\ORM\QueryBuilder($this->getEntityManager());
-            $q->select('p')
-              ->from('Goutte\WordpressBundle\Entity\Post', 'p')
-//              ->where   ('p._post_type      = :type')
-              ->andWhere('p.status    = :status')
-              ->andWhere('p.mime_type = :mime_type');
-
-//            $q->setParameter('type',     Post::TYPE_ATTACHMENT);
-            $q->setParameter('status',   Post::STATUS_INHERIT);
-            $q->setParameter('mimeType', $mimeType);
+            $subtypes = (array) $subtypes;
+            $mimes = array();
+            foreach ($subtypes as $subtype) {
+                $mimes[] = "{$type}/{$subtype}";
+            }
+            $qb->andWhere($qb->expr()->in('i.mime_type', $mimes));
         }
 
-
-//        $query->setParameter('type',     Post::TYPE_ATTACHMENT);
-        $query->setParameter('status',   Post::STATUS_INHERIT);
-        $query->setParameter('mimeType', $mimeType);
-
-        return $query;
+        return $qb;
     }
-
-
-
-
-
-    /**
-     * Finds all Jpeg Images
-     */
-    public function findJpegImages()
-    {
-        $mimeType = 'image/jpeg';
-
-        return $this->getMediasQuery($mimeType)->getResult();
-    }
-
 }

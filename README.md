@@ -2,7 +2,15 @@ What is it ?
 ============
 
 This is a bridge between WordPress and Symfony2.
-It provides Repositories and Entities for reading the WP database.
+
+This bundle will allow you to :
+- find published posts/pages
+    - all of them
+    - by slug
+- find attachments by mime-type, specifically images
+
+That's all !
+
 
 Inspired (a lot!) by :
 - https://github.com/kayue/WordpressBundle
@@ -12,14 +20,15 @@ Inspired (a lot!) by :
 I re-did the bundle from scratch because I wanted working and clean tests at all times. Plus, it's a learner's project.
 
 You should not use this bundle, as using both WordPress AND Symfony2 is a bad practice,
-but until the [CMF](http://cmf.symfony.com) is media-ready this is a good enough alternative.
+but until the [CMF](http://cmf.symfony.com) is media-ready this is a good enough alternative in some fast-food cases.
 
 
 How to use
 ==========
 
-1. Register this bundle in your AppKernel.php
-2. Configure in app/config.yml
+1. Create your wordpress as usual
+2. Register this bundle in your AppKernel.php
+3. Configure in app/config.yml
 
     ```yml
     goutte_wordpress:
@@ -27,28 +36,82 @@ How to use
         table_prefix: wp_
     ```
 
+4. Configure your parameters.yml to point towards the wordpress database
+
 
 Usage examples
 ==============
 
-In a Controller
+
+Posts
+-----
+
+Will only fetch posts, not pages nor attachments. (see below on how to get those)
 
 ```php
 <?php
-class WordpressController extends Controller
-{
-    public function listAction() {
-      $em = $this->get('doctrine')->getEntityManager();
-      $repository = $em->getRepository('GoutteWordpressBundle:Post');
 
-      $posts  = $repository->findPublishedPosts();
-      $images = $repository->findJpegImages();
+$em = $this->get('doctrine')->getEntityManager(); // whichever way you're using to get the em
 
-      // ...
-    }
+$postRepository = $em->getRepository('GoutteWordpressBundle:Post');
+
+$posts = $postRepository->findPublished(); // finds all published posts
+
+$post = $postRepository->findPublishedBySlug(); // finds one post by its slug, or returns false
+if (!empty($post)) {
+  // ...
 }
+
+// ...
+
 ```
 
+
+Pages
+-----
+
+```php
+<?php
+
+$em = $this->get('doctrine')->getEntityManager(); // whichever way you're using to get the em
+
+$pageRepository = $em->getRepository('GoutteWordpressBundle:Page');
+
+$pages = $pageRepository->findPublished(); // finds all published pages
+
+$page = $pageRepository->findPublishedBySlug(); // finds one page by its slug, or returns false
+if (!empty($page)) {
+  // ...
+}
+
+
+// ...
+
+```
+
+
+Images
+------
+
+```php
+<?php
+$em = $this->get('doctrine')->getEntityManager(); // whichever way you're using to get the em
+
+$attachmentRepository = $em->getRepository('GoutteWordpressBundle:Attachment')
+
+// Find all images (attachments whose mime-type starts with 'image/')
+$allImages = $attachmentRepository->findImages();
+
+// any mime subtype works as parameter, juste make sure to spell it as wordpress does (eg: jpeg vs jpg)
+$pngImages = $attachmentRepository->findImages('png');
+$jpgImages = $attachmentRepository->findImages('jpeg');
+
+// you can also pass an array, for convenience
+$transparentImages = $attachmentRepository->findImages(array('gif','png', 'webp'));
+
+// ...
+
+```
 
 
 How to setup tests
@@ -57,8 +120,7 @@ How to setup tests
 1. Copy phpunit.xml.dist to phpunit.xml
 2. Configure KERNEL_DIR
 3. Register this bundle in your AppKernel.php
-4. Update your composer.json, as we are using Doctrine Mocks.
-   This is not optimized, how can I restrict this to the test env ?
+4. Update your composer.json, as we are using Doctrine Mocks. This is not optimized, how can I restrict this to the test env ?
 
    ```json
    "autoload": {
@@ -68,7 +130,8 @@ How to setup tests
    }
    ```
 
-5. Run !
+5. /!\ Make sure you have another database setup for your tests, because the suite will ruin the database !
+6. Run !
 
 
 Requirements

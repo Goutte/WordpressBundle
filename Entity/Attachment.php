@@ -15,6 +15,6 @@ use Symfony\Component\Validator\Constraints as Constraints;
 class Attachment extends BasePost
 {
 
-    // fixme : add mime type related methods
+    const TYPE_IMAGE = 'image';
 
 }
