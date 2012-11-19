@@ -25,7 +25,7 @@ class AttachmentRepository extends BasePostRepository
      * @param mixed  $subtypes
      * @return QueryBuilder
      */
-    protected function cqbForTypeAndSubtypes($type, $subtypes=null)
+    public function cqbForTypeAndSubtypes($type, $subtypes=null)
     {
         $qb = $this->createQueryBuilder('i');
         if (empty($subtypes)) {

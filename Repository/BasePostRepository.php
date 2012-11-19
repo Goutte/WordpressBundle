@@ -51,7 +51,7 @@ class BasePostRepository extends EntityRepository
      * Orders them by date of creation, most recent first
      * @return \Doctrine\ORM\QueryBuilder
      */
-    protected function cqbPublished()
+    public function cqbPublished()
     {
         $qb = $this->createQueryBuilder('p');
         $qb->andWhere('p.status = :status');
