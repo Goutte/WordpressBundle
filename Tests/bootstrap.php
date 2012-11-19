@@ -17,3 +17,14 @@ foreach (array('KERNEL_DIR') as $component) {
 
 // Load sf2 bootstrap
 $loader = require $_SERVER['KERNEL_DIR'] . '/bootstrap.php.cache';
+
+
+/**
+ * Tests database
+ *
+ * Title: WordpressBundle Testing
+ *
+ * WP UserAdmin:
+ * admin
+ * admin
+ */
