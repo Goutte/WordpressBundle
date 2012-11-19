@@ -28,14 +28,18 @@ class TablePrefixSubscriber implements EventSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $args)
     {
         // Do not apply prefix if not a WordpressBundle Entity
-        if ($args->getClassMetadata()->namespace !== "Goutte\\WordpressBundle\\Entity") {
-            return;
-        }
+        if ("Goutte\\WordpressBundle\\Entity" !== $args->getClassMetadata()->namespace) return;
 
         $classMetadata = $args->getClassMetadata();
+        $table_name = $classMetadata->getTableName();
+
         $prefix = $this->getTablePrefix($args);
 
-        $classMetadata->setPrimaryTable(array('name'=>$prefix.$classMetadata->getTableName()));
+        // Do not apply prefix if already there
+        // (or find another way to avoid going through here multiple times with Doctrine's SINGLE_TABLE inheritance)
+        if (0 === strpos($table_name, $prefix)) return;
+
+        $classMetadata->setPrimaryTable(array('name'=>$prefix.$table_name));
     }
 
     private function getTablePrefix(LoadClassMetadataEventArgs $args)
