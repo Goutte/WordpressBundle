@@ -8,62 +8,63 @@ use Goutte\WordpressBundle\Entity\Post;
 
 class PostRepository extends EntityRepository
 {
-    /**
-     * @return Query
-     */
-    public function getPublishedPostsQuery()
-    {
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT p, a FROM Goutte\WordpressBundle\Entity\Post p
-             INNER JOIN p.user a
-             WHERE p.type = :type
-             AND p.status = :status
-             ORDER BY p.created_at DESC'
-        );
-
-        $query->setParameter('type',   Post::TYPE_POST);
-        $query->setParameter('status', Post::STATUS_PUBLISH);
-
-        return $query;
-    }
 
     /**
      * Find published posts, maximum $maxResults and from offset $offset
      * @param integer $maxResults
      * @param integer $offset
-     * @return Post Collection
+     * @return \Doctrine\Common\Collections\Collection of Post
      */
-    public function findPublishedPosts($maxResults = 3, $offset = 0)
+    public function findPublished($maxResults = 3, $offset = 0)
     {
-        $query = $this->getPublishedPostsQuery();
+        $query = $this->cqbPublishedPost()->getQuery();
         $query->setMaxResults($maxResults);
         $query->setFirstResult($offset);
 
         return $query->getResult();
     }
 
+
     /**
-     * Find one published post or page, by its slug
-     * @param string $slug
-     * @return Post
+     * Find the pulished Post with the specified $slug
+     * If not found, return false
+     * @param $slug
+     * @return bool|Post
      */
-    public function findPublishedPostOrPageBySlug($slug)
+    public function findPublishedBySlug($slug)
     {
-        $query = $this->getEntityManager()->createQuery(
-            'SELECT p FROM Goutte \WordpressBundle\Entity\Post p
-             WHERE p.slug = :slug
-             AND p.status = :status
-             AND p.type IN (:type_post, :type_page)'
-        );
+        $qb = $this->cqbPublishedPost();
+        $qb->andWhere('p.slug = :slug');
+        $qb->setParameter('slug', $slug);
 
-        $query->setParameter('slug',      $slug);
-        $query->setParameter('status',    Post::STATUS_PUBLISH);
-        $query->setParameter('type_post', Post::TYPE_POST);
-        $query->setParameter('type_page', Post::TYPE_PAGE);
-
-        return $query->getSingleResult();
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            return false;
+        }
     }
 
+    /**
+     * Creates a QueryBuilder for Posts with the status published
+     * Orders them by date of creation, most recent first
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    protected function cqbPublishedPost()
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->andWhere('p.status = :status');
+        $qb->andWhere('p.type   = :type_post');
+        $qb->orderBy('p.created_at', 'DESC');
+
+        $qb->setParameter('status',    Post::STATUS_PUBLISH);
+        $qb->setParameter('type_post', Post::TYPE_POST);
+
+        return $qb;
+    }
+
+
+
+//// FIXME : MOVE THIS
 
     /**
      * @param $mimeType
@@ -79,12 +80,34 @@ class PostRepository extends EntityRepository
              ORDER BY p.created_at DESC'
         );
 
+        list ($type, $subtype) = explode('/', $mimeType);
+
+        if (empty($subtype)) {
+
+        } else {
+            $q = new \Doctrine\ORM\QueryBuilder($this->getEntityManager());
+            $q->select('p')
+              ->from('Goutte\WordpressBundle\Entity\Post', 'p')
+              ->where   ('p.type      = :type')
+              ->andWhere('p.status    = :status')
+              ->andWhere('p.mime_type = :mime_type');
+
+            $q->setParameter('type',     Post::TYPE_ATTACHMENT);
+            $q->setParameter('status',   Post::STATUS_INHERIT);
+            $q->setParameter('mimeType', $mimeType);
+        }
+
+
         $query->setParameter('type',     Post::TYPE_ATTACHMENT);
         $query->setParameter('status',   Post::STATUS_INHERIT);
         $query->setParameter('mimeType', $mimeType);
 
         return $query;
     }
+
+
+
+
 
     /**
      * Finds all Jpeg Images
