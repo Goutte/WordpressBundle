@@ -27,6 +27,7 @@ How to use
 ==========
 
 1. Create your wordpress as usual
+2. Download and include this bundle
 2. Register this bundle in your AppKernel.php
 3. Configure in app/config.yml
 
@@ -46,7 +47,6 @@ You'll need the Entity Manager
 
 ```php
 $em = $this->get('doctrine')->getEntityManager(); // whichever way you're using to get the em
-
 ```
 
 
@@ -60,11 +60,14 @@ $postRepository = $em->getRepository('GoutteWordpressBundle:Post');
 
 $posts = $postRepository->findPublished(); // finds all published posts
 
-$post = $postRepository->findPublishedBySlug(); // finds one post by its slug, or returns false
+// finds a maximum of 5 published posts after omitting the first 3
+$posts = $postRepository->findPublished(5,3);
+
+// finds one post by its slug, or returns false
+$post = $postRepository->findPublishedBySlug('hello-word');
 if (!empty($post)) {
   // ...
 }
-
 ```
 
 
@@ -76,11 +79,14 @@ $pageRepository = $em->getRepository('GoutteWordpressBundle:Page');
 
 $pages = $pageRepository->findPublished(); // finds all published pages
 
-$page = $pageRepository->findPublishedBySlug(); // finds one page by its slug, or returns false
+// finds a maximum of 5 published pages after omitting the first 3
+$pages = $pageRepository->findPublished(5,3);
+
+// finds one page by its slug, or returns false
+$page = $pageRepository->findPublishedBySlug('hello-word');
 if (!empty($page)) {
   // ...
 }
-
 ```
 
 
