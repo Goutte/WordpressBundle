@@ -715,28 +715,8 @@ class BasePost
         return $this->menu_order;
     }
 
-//    /**
-//     * Set type
-//     *
-//     * @param string $type
-//     */
-//    public function setType($type)
-//    {
-//        $this->type = $type;
-//    }
-//
-//    /**
-//     * Get type
-//     *
-//     * @return string
-//     */
-//    public function getType()
-//    {
-//        return $this->type;
-//    }
-
     /**
-     * Set mimeType
+     * Set Mime Type
      *
      * @param string $mimeType
      */
@@ -746,7 +726,7 @@ class BasePost
     }
 
     /**
-     * Get mimeType
+     * Get Mime Type, like "image/png" for example
      *
      * @return string
      */
@@ -756,7 +736,7 @@ class BasePost
     }
 
     /**
-     * Set commentCount
+     * Set comments count
      *
      * @param int $commentCount
      */
@@ -766,7 +746,7 @@ class BasePost
     }
 
     /**
-     * Get commentCount
+     * Get comments count
      *
      * @return int
      */
@@ -776,19 +756,15 @@ class BasePost
     }
 
     /**
-     * Add metas
-     *
-     * @param \Goutte\WordpressBundle\Entity\PostMeta $meta
+     * @param PostMeta $meta
      */
-    public function addMeta(\Goutte\WordpressBundle\Entity\PostMeta $meta)
+    public function addMeta(PostMeta $meta)
     {
         $meta->setPost($this);
         $this->metas[] = $meta;
     }
 
     /**
-     * Get metas
-     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getMetas()
@@ -797,7 +773,7 @@ class BasePost
     }
 
     /**
-     * Get metas by meta key
+     * Get the collection of metas answering to provided $key
      *
      * @param string $key
      * @return \Doctrine\Common\Collections\Collection
@@ -809,6 +785,12 @@ class BasePost
         });
     }
 
+    /**
+     * Get the last meta answering to provided $key
+     *
+     * @param  string $key
+     * @return mixed|null
+     */
     public function getMeta($key)
     {
         $metas = $this->getMetasByKey($key);
@@ -818,6 +800,12 @@ class BasePost
         return null;
     }
 
+    /**
+     * Get the last meta's value answering to provided $key
+     *
+     * @param  string $key
+     * @return mixed|null
+     */
     public function getMetaValue($key)
     {
         $meta = $this->getMeta($key);
@@ -828,8 +816,6 @@ class BasePost
     }
 
     /**
-     * Add comment
-     *
      * @param \Goutte\WordpressBundle\Entity\Comment $comment
      */
     public function addComment(\Goutte\WordpressBundle\Entity\Comment $comment)
@@ -840,8 +826,6 @@ class BasePost
     }
 
     /**
-     * Get comments
-     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getComments()
@@ -850,8 +834,6 @@ class BasePost
     }
 
     /**
-     * Add taxonomies
-     *
      * @param \Goutte\WordpressBundle\Entity\Taxonomy $taxonomy
      */
     public function addTaxonomy(\Goutte\WordpressBundle\Entity\Taxonomy $taxonomy)
@@ -860,8 +842,6 @@ class BasePost
     }
 
     /**
-     * Get taxonomies
-     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getTaxonomies()
@@ -870,8 +850,6 @@ class BasePost
     }
 
     /**
-     * Set user
-     *
      * @param \Goutte\WordpressBundle\Entity\User $user
      */
     public function setAuthor(\Goutte\WordpressBundle\Entity\User $user)
@@ -880,8 +858,6 @@ class BasePost
     }
 
     /**
-     * Get user
-     *
      * @return \Goutte\WordpressBundle\Entity\User | null
      */
     public function getAuthor()
