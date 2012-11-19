@@ -27,9 +27,9 @@ How to use
 ==========
 
 1. Create your wordpress as usual
-2. Download and include this bundle
-2. Register this bundle in your AppKernel.php
-3. Configure in app/config.yml
+2. Add [this bundle](https://packagist.org/packages/goutte/wordpress-bundle) to your composer.json
+3. Register this bundle in your AppKernel.php
+4. Configure in app/config.yml
 
     ```yml
     goutte_wordpress:
@@ -37,7 +37,7 @@ How to use
         table_prefix: wp_
     ```
 
-4. Configure your parameters.yml to point towards the wordpress database
+5. Configure your parameters.yml to point towards the wordpress database
 
 
 Usage examples

@@ -2,7 +2,7 @@
 
 namespace Goutte\WordpressBundle\Tests\Repository;
 
-use Goutte\WordpressBundle\Tests\Repository\RepositoryTestCase;
+use Goutte\WordpressBundle\Tests\TestCase\RepositoryTestCase;
 
 class AttachmentRepositoryTest extends RepositoryTestCase
 {

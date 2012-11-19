@@ -2,32 +2,14 @@
 
 namespace Goutte\WordpressBundle\Tests\Entity;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Goutte\WordpressBundle\Tests\TestCase\FixturedTestCase;
+
 use Goutte\WordpressBundle\Entity\Post;
 use Goutte\WordpressBundle\Entity\Comment;
 use Goutte\WordpressBundle\Entity\User;
 
-class PostTest extends WebTestCase
+class PostTest extends FixturedTestCase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $em;
-
-    /**
-     * @var \Symfony\Component\HttpKernel\Kernel
-     */
-    static $kernel;
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        static::$kernel = static::createKernel();
-        static::$kernel->boot();
-
-        $this->em = static::$kernel->getContainer()->get('doctrine.orm.entity_manager');
-    }
 
     /**
      * Makes sure the Excerpt is no longer than 30 characters
@@ -42,6 +24,33 @@ class PostTest extends WebTestCase
         $post->setContent($content);
 
         $this->assertLessThanOrEqual(30, strlen($post->getExcerpt()));
+    }
+
+    public function testGetMetasByKey()
+    {
+        $postRepository = $this->getEm()->getRepository('GoutteWordpressBundle:Post');
+        $post = $postRepository->findOneBy(array('id'=>1));
+
+        $this->assertCount(0, $post->getMetasByKey('_wp_nothing'));
+        $this->assertCount(1, $post->getMetasByKey('_wp_something'));
+    }
+
+    public function testGetMeta()
+    {
+        $postRepository = $this->getEm()->getRepository('GoutteWordpressBundle:Post');
+        $post = $postRepository->findOneBy(array('id'=>1));
+
+        $this->assertNull($post->getMeta('_wp_nothing'));
+        $this->assertNotNull($post->getMeta('_wp_something'));
+    }
+
+    public function testGetMetaValue()
+    {
+        $postRepository = $this->getEm()->getRepository('GoutteWordpressBundle:Post');
+        $post = $postRepository->findOneBy(array('id'=>1));
+
+        $this->assertNull($post->getMetaValue('_wp_nothing'));
+        $this->assertEquals('good', $post->getMetaValue('_wp_something'));
     }
 
 //    /**

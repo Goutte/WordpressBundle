@@ -232,7 +232,7 @@ class BasePost
      *   @ORM\JoinColumn(name="post_author", referencedColumnName="ID")
      * })
      */
-    private $user;
+    private $author;
 
     /**
      * @var \Goutte\WordpressBundle\Entity\Taxonomy
@@ -809,6 +809,24 @@ class BasePost
         });
     }
 
+    public function getMeta($key)
+    {
+        $metas = $this->getMetasByKey($key);
+
+        if (count($metas)) return $metas->last();
+
+        return null;
+    }
+
+    public function getMetaValue($key)
+    {
+        $meta = $this->getMeta($key);
+
+        if (!empty($meta)) return $meta->getValue();
+
+        return null;
+    }
+
     /**
      * Add comment
      *
@@ -856,9 +874,9 @@ class BasePost
      *
      * @param \Goutte\WordpressBundle\Entity\User $user
      */
-    public function setUser(\Goutte\WordpressBundle\Entity\User $user)
+    public function setAuthor(\Goutte\WordpressBundle\Entity\User $user)
     {
-        $this->user = $user;
+        $this->author = $user;
     }
 
     /**
@@ -866,19 +884,19 @@ class BasePost
      *
      * @return \Goutte\WordpressBundle\Entity\User | null
      */
-    public function getUser()
+    public function getAuthor()
     {
-        if ($this->user instanceof \Doctrine\ORM\Proxy\Proxy) {
+        if ($this->author instanceof \Doctrine\ORM\Proxy\Proxy) {
             try {
                 // prevent lazy loading the user entity becuase it might not exist
-                $this->user->__load();
+                $this->author->__load();
             } catch (\Doctrine\ORM\EntityNotFoundException $e) {
                 // return null if user does not exist
-                $this->user = null;
+                $this->author = null;
             }
         }
 
-        return $this->user;
+        return $this->author;
     }
 
 }

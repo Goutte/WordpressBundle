@@ -3,7 +3,7 @@
 namespace Goutte\WordpressBundle\Tests\Repository;
 
 use Goutte\WordpressBundle\Entity\Post;
-use Goutte\WordpressBundle\Tests\Repository\RepositoryTestCase;
+use Goutte\WordpressBundle\Tests\TestCase\RepositoryTestCase;
 
 class PostRepositoryTest extends RepositoryTestCase
 {
