@@ -42,6 +42,13 @@ How to use
 Usage examples
 ==============
 
+You'll need the Entity Manager
+
+```php
+$em = $this->get('doctrine')->getEntityManager(); // whichever way you're using to get the em
+
+```
+
 
 Posts
 -----
@@ -49,10 +56,6 @@ Posts
 Will only fetch posts, not pages nor attachments. (see below on how to get those)
 
 ```php
-<?php
-
-$em = $this->get('doctrine')->getEntityManager(); // whichever way you're using to get the em
-
 $postRepository = $em->getRepository('GoutteWordpressBundle:Post');
 
 $posts = $postRepository->findPublished(); // finds all published posts
@@ -62,8 +65,6 @@ if (!empty($post)) {
   // ...
 }
 
-// ...
-
 ```
 
 
@@ -71,10 +72,6 @@ Pages
 -----
 
 ```php
-<?php
-
-$em = $this->get('doctrine')->getEntityManager(); // whichever way you're using to get the em
-
 $pageRepository = $em->getRepository('GoutteWordpressBundle:Page');
 
 $pages = $pageRepository->findPublished(); // finds all published pages
@@ -84,9 +81,6 @@ if (!empty($page)) {
   // ...
 }
 
-
-// ...
-
 ```
 
 
@@ -95,8 +89,6 @@ Images
 
 ```php
 <?php
-$em = $this->get('doctrine')->getEntityManager(); // whichever way you're using to get the em
-
 $attachmentRepository = $em->getRepository('GoutteWordpressBundle:Attachment')
 
 // Find all images (attachments whose mime-type starts with 'image/')
@@ -108,8 +100,6 @@ $jpgImages = $attachmentRepository->findImages('jpeg');
 
 // you can also pass an array, for convenience
 $transparentImages = $attachmentRepository->findImages(array('gif','png', 'webp'));
-
-// ...
 
 ```
 
