@@ -106,7 +106,6 @@ $jpgImages = $attachmentRepository->findImages('jpeg');
 
 // you can also pass an array, for convenience
 $transparentImages = $attachmentRepository->findImages(array('gif','png', 'webp'));
-
 ```
 
 
