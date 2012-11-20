@@ -27,9 +27,9 @@ class AttachmentRepository extends BasePostRepository
      */
     public function cqbForTypeAndSubtypes($type, $subtypes=null)
     {
-        $qb = $this->createQueryBuilder('i');
+        $qb = $this->createQueryBuilder('a');
         if (empty($subtypes)) {
-            $qb->andWhere('i.mime_type LIKE :type');
+            $qb->andWhere('a.mime_type LIKE :type');
             $qb->setParameter('type', $type.'%');
         } else {
             $subtypes = (array) $subtypes;
@@ -37,7 +37,7 @@ class AttachmentRepository extends BasePostRepository
             foreach ($subtypes as $subtype) {
                 $mimes[] = "{$type}/{$subtype}";
             }
-            $qb->andWhere($qb->expr()->in('i.mime_type', $mimes));
+            $qb->andWhere($qb->expr()->in('a.mime_type', $mimes));
         }
 
         return $qb;
