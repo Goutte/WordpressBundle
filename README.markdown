@@ -108,7 +108,7 @@ Attachments
 ```php
 // you may also use directly the query builder, for flexibility
 $documentsQb = $attachmentRepository->cqbForTypeAndSubtypes('application', array('pdf','msword'));
-$documentsQb = $documentsQb->orderBy('a.comment_count', 'DESC'); // see BasePost Entity for fields names
+$documentsQb = $documentsQb->orderBy('a.comment_count', 'DESC'); // see BasePost Entity for field name
 $documents   = $documentsQb->getQuery->getResult();
 ```
 
