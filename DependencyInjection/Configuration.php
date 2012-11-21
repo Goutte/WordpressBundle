@@ -5,7 +5,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Configuration for the bundle
+ * Configuration for the WordPressBundle
  */
 class Configuration implements ConfigurationInterface
 {

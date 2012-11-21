@@ -2,7 +2,7 @@
 
 namespace Goutte\WordpressBundle\Repository;
 
-use Doctrine\ORM\Mapping as ORM; // needed (inheritance?)
+use Doctrine\ORM\Mapping as ORM; // needed by SINGLE_TABLE inheritance
 use Doctrine\ORM\QueryBuilder;
 use Goutte\WordpressBundle\Entity\Attachment;
 
