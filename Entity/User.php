@@ -101,9 +101,9 @@ class User implements UserInterface
     private $status = 0;
 
     /**
-     * @var \Goutte\WordpressBundle\Entity\Post
+     * @var \Goutte\WordpressBundle\Entity\BasePost
      *
-     * @ORM\OneToMany(targetEntity="Goutte\WordpressBundle\Entity\Post", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Goutte\WordpressBundle\Entity\BasePost", mappedBy="user")
      */
     private $posts;
 
