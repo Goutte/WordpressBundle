@@ -103,7 +103,7 @@ class User implements UserInterface
     /**
      * @var \Goutte\WordpressBundle\Entity\BasePost
      *
-     * @ORM\OneToMany(targetEntity="Goutte\WordpressBundle\Entity\BasePost", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Goutte\WordpressBundle\Entity\BasePost", mappedBy="author")
      */
     private $posts;
 
