@@ -65,9 +65,6 @@ $posts = $postRepository->findPublished(5,3);
 
 // finds one post by its slug, or returns false
 $post = $postRepository->findPublishedBySlug('hello-word');
-if (!empty($post)) {
-  // ...
-}
 ```
 
 
@@ -84,9 +81,6 @@ $pages = $pageRepository->findPublished(5,3);
 
 // finds one page by its slug, or returns false
 $page = $pageRepository->findPublishedBySlug('hello-word');
-if (!empty($page)) {
-  // ...
-}
 ```
 
 
@@ -106,6 +100,16 @@ $jpgImages = $attachmentRepository->findImages('jpeg');
 
 // you can also pass an array, for convenience
 $transparentImages = $attachmentRepository->findImages(array('gif','png', 'webp'));
+```
+
+Attachments
+-----------
+
+```php
+// you may also use directly the query builder, for flexibility
+$documentsQb = $attachmentRepository->cqbForTypeAndSubtypes('application', array('pdf','msword'));
+$documentsQb = $documentsQb->orderBy('a.comment_count', 'DESC'); // see BasePost Entity for field name
+$documents   = $documentsQb->getQuery->getResult();
 ```
 
 
@@ -132,7 +136,7 @@ How to setup tests
 Requirements
 ============
 
-* WordPress 3.4.2
+* WordPress >=3.4.2 and <=3.5
 
 
 Caveats
