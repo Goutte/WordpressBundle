@@ -36,8 +36,11 @@ class TablePrefixSubscriber implements EventSubscriber
         $prefix = $this->getTablePrefix($args);
 
         // Do not apply prefix if already there
-        // (or find another way to avoid going through here multiple times with Doctrine's SINGLE_TABLE inheritance)
-        if (0 === strpos($table_name, $prefix)) return;
+        if ($classMetadata->isInheritanceTypeSingleTable() && !$classMetadata->isRootEntity()) {
+            return;
+        }
+
+
 
         $classMetadata->setPrimaryTable(array('name'=>$prefix.$table_name));
     }
